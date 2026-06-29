@@ -1,27 +1,25 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, Suspense } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
-import * as THREE from 'three'
 
-export default function FloatingText3D() {
-  const groupRef = useRef()
-  const timeRef = useRef(0)
+function TextContent() {
+  const ref = useRef()
+  const t = useRef(0)
 
   useFrame((_, delta) => {
-    if (!groupRef.current) return
-    timeRef.current += delta
-    groupRef.current.position.y = 1.6 + Math.sin(timeRef.current * 0.4) * 0.15
-    groupRef.current.rotation.y = Math.sin(timeRef.current * 0.15) * 0.1
+    if (!ref.current) return
+    t.current += delta
+    ref.current.position.y = 1.6 + Math.sin(t.current * 0.4) * 0.15
+    ref.current.rotation.y = Math.sin(t.current * 0.15) * 0.1
   })
 
   return (
-    <group ref={groupRef} position={[0.2, 1.6, 0]} scale={1}>
+    <group ref={ref} position={[0.2, 1.6, 0]}>
       <Text
         position={[0, 0, 0]}
         fontSize={0.35}
-        font="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff"
         color="#FFD700"
         anchorX="center"
         anchorY="middle"
@@ -34,8 +32,7 @@ export default function FloatingText3D() {
       <Text
         position={[0, -0.35, 0]}
         fontSize={0.08}
-        font="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff"
-        color="#FFFFFF"
+        color="#ffffff"
         anchorX="center"
         anchorY="middle"
         opacity={0.6}
@@ -43,5 +40,13 @@ export default function FloatingText3D() {
         Where every paw leaves a print
       </Text>
     </group>
+  )
+}
+
+export default function FloatingText3D() {
+  return (
+    <Suspense fallback={null}>
+      <TextContent />
+    </Suspense>
   )
 }
